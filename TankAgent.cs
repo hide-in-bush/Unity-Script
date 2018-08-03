@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAgents;
@@ -98,7 +98,7 @@ public class TankAgent : Agent
         AddVectorObs(invertMult * oppoagentRb.velocity.z / speed);
         AddVectorObs(oppoagentRb.angularVelocity.y / angularSpeed);
 
-        //shell info
+        //shell cooldown info
         shellIsReady = (Time.fixedTime >= cdStartTime + 1f) ? true : false;
         if (shellIsReady) AddVectorObs(1f);
         else AddVectorObs(-1f);
@@ -121,6 +121,7 @@ public class TankAgent : Agent
         agentRb.velocity = transform.forward * moveForward * speed;
         agentRb.angularVelocity = transform.up * rotate * angularSpeed;
 
+        //fire
         if (shellIsReady && fire)
         {
             //先去掉声音 AudioSource.PlayClipAtPoint(shotAudio, transform.position);
@@ -132,8 +133,8 @@ public class TankAgent : Agent
 
 
         //count reward
-        if (transform.localPosition.x < -15 || transform.localPosition.x > 15) AddReward(-0.1f);
-        if (transform.localPosition.z < -15 || transform.localPosition.z > 15) AddReward(-0.1f);
+        if (transform.localPosition.x < -15 || transform.localPosition.x > 15) AddReward(-0.05f);
+        if (transform.localPosition.z < -15 || transform.localPosition.z > 15) AddReward(-0.05f);
 
 
         if (tankHealth.hp < previoushp)
